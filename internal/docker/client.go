@@ -67,9 +67,6 @@ func New(socketPath, registryOrg string) (*Client, error) {
 func (c *Client) ListServices(ctx context.Context) ([]ServiceInfo, error) {
 	containers, err := c.cli.ContainerList(ctx, container.ListOptions{
 		All: true,
-		Filters: filters.NewArgs(
-			filters.Arg("label", "com.docker.compose.project"),
-		),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list containers: %w", err)
