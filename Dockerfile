@@ -1,5 +1,5 @@
 # ============================================
-# Stage 1: Build React UI
+# Stage 1: Build Control Plane UI (admin)
 # ============================================
 FROM node:20-alpine AS ui-builder
 
@@ -18,19 +18,15 @@ RUN apk add --no-cache gcc musl-dev
 
 WORKDIR /app
 
-# Copy go.mod and go.sum first for caching
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy source code
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 
-# Copy built UI into ui/dist for embed
 COPY ui/embed.go ./ui/embed.go
 COPY --from=ui-builder /ui/dist ./ui/dist
 
-# Build with CGO enabled (for SQLite) and ldflags
 ARG VERSION=dev
 ARG COMMIT=unknown
 ARG BUILD_TIME=unknown
