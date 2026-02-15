@@ -1,0 +1,8 @@
+.git
+.gitignore
+*.md
+!README.md
+controlplane
+ui/node_modules
+ui/dist
+.github

@@ -1,0 +1,21 @@
+# Go
+controlplane
+*.exe
+
+# UI
+ui/node_modules/
+ui/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config (may contain secrets)
+config.yaml
+
+# SQLite
+*.db

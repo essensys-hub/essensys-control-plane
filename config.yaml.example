@@ -1,0 +1,20 @@
+# Essensys Control Plane - Configuration
+# Copy to config.yaml and adjust values
+
+server:
+  port: 9100
+  token: "your-secret-token"  # Bearer token for API auth
+
+redis:
+  addr: "localhost:6379"       # Redis server address (or "redis:6379" in Docker)
+  password: ""                 # Redis password (empty if none)
+  db: 0                        # Redis database number
+
+docker:
+  socket_path: "/var/run/docker.sock"  # Docker socket path
+
+sqlite:
+  path: "/data/controlplane.db"  # SQLite database file path
+
+registry:
+  org: "nrineau"  # Docker Hub organization/user for image pulls

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/* Essensys Control Plane — UniFi-inspired design system */
+
+@theme {
+  --color-cp-blue: #006FFF;
+  --color-cp-blue-light: #E8F0FE;
+  --color-cp-green: #00C853;
+  --color-cp-green-light: #E8F5E9;
+  --color-cp-orange: #FF9800;
+  --color-cp-orange-light: #FFF3E0;
+  --color-cp-red: #F44336;
+  --color-cp-red-light: #FFEBEE;
+  --color-cp-gray-50: #FAFAFA;
+  --color-cp-gray-100: #F5F5F5;
+  --color-cp-gray-200: #EEEEEE;
+  --color-cp-gray-300: #E0E0E0;
+  --color-cp-gray-400: #BDBDBD;
+  --color-cp-gray-500: #9E9E9E;
+  --color-cp-gray-600: #757575;
+  --color-cp-gray-700: #616161;
+  --color-cp-gray-800: #424242;
+  --color-cp-gray-900: #212121;
+  --color-cp-sidebar: #1A1A2E;
+  --color-cp-sidebar-hover: #2A2A4E;
+  --color-cp-sidebar-active: #006FFF;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-cp-gray-50);
+  color: var(--color-cp-gray-900);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-cp-gray-300);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-cp-gray-400);
+}
