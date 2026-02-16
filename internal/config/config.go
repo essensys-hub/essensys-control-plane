@@ -17,8 +17,9 @@ type Config struct {
 }
 
 type ServerConfig struct {
-	Port  int    `yaml:"port"`
-	Token string `yaml:"token"`
+	Port     int    `yaml:"port"`
+	Token    string `yaml:"token"`
+	BasePath string `yaml:"base_path"`
 }
 
 type RedisConfig struct {
@@ -42,8 +43,9 @@ type RegistryConfig struct {
 func DefaultConfig() *Config {
 	return &Config{
 		Server: ServerConfig{
-			Port:  9100,
-			Token: "",
+			Port:     9100,
+			Token:    "",
+			BasePath: "/controle_plane",
 		},
 		Redis: RedisConfig{
 			Addr:     "localhost:6379",
@@ -109,5 +111,8 @@ func (c *Config) loadFromEnv() {
 	}
 	if v := os.Getenv("REGISTRY_ORG"); v != "" {
 		c.Registry.Org = v
+	}
+	if v := os.Getenv("CP_BASE_PATH"); v != "" {
+		c.Server.BasePath = v
 	}
 }

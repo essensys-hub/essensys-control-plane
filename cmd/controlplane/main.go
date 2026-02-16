@@ -81,7 +81,7 @@ func main() {
 	}
 
 	// Build router
-	router := api.NewRouter(dockerClient, redisClient, sqliteStore, cfg.Server.Token, staticFS)
+	router := api.NewRouter(dockerClient, redisClient, sqliteStore, cfg.Server.Token, cfg.Server.BasePath, staticFS)
 
 	// Mount Prometheus metrics endpoint
 	mux := http.NewServeMux()

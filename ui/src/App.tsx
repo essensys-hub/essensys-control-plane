@@ -11,9 +11,11 @@ import SystemPage from './pages/SystemPage'
 import MetricsPage from './pages/MetricsPage'
 import AlertsPage from './pages/AlertsPage'
 
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '') || ''
+
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASE_PATH}>
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<DashboardPage />} />

@@ -12,7 +12,8 @@ import type {
   HealthInfo,
 } from '../types'
 
-const BASE = '/api'
+const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '') || ''
+const BASE = BASE_PATH + '/api'
 
 async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(BASE + url, {
@@ -148,5 +149,5 @@ export const alertmanager = {
 // --- WebSocket helpers ---
 export function createWebSocket(path: string): WebSocket {
   const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-  return new WebSocket(`${proto}//${window.location.host}${BASE}${path}`)
+  return new WebSocket(`${proto}//${window.location.host}${BASE_PATH}/api${path}`)
 }

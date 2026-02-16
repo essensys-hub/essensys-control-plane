@@ -3,6 +3,7 @@ package api
 import (
 	"io/fs"
 	"net/http"
+	"strings"
 
 	"github.com/essensys-hub/essensys-control-plane/internal/docker"
 	redisclient "github.com/essensys-hub/essensys-control-plane/internal/redis"
@@ -14,6 +15,7 @@ func NewRouter(
 	redisClient *redisclient.Client,
 	sqliteStore *store.Store,
 	token string,
+	basePath string,
 	staticFS fs.FS,
 ) http.Handler {
 	mux := http.NewServeMux()
@@ -93,14 +95,50 @@ func NewRouter(
 		mux.Handle("/", spaHandler(fileServer, staticFS))
 	}
 
-	// Middleware chain: Recovery → CORS → Logger → Auth → Routes
+	// Middleware chain: BasePath → Recovery → CORS → Logger → Auth → Routes
 	var handler http.Handler = mux
 	handler = BearerAuth(token)(handler)
 	handler = RequestLogger(handler)
 	handler = CORS(handler)
 	handler = Recovery(handler)
+	if basePath != "" {
+		handler = BasePathMiddleware(basePath, handler)
+	}
 
 	return handler
+}
+
+// BasePathMiddleware strips the base path prefix from incoming requests.
+// Requests to /health and /metrics pass through unchanged (for Prometheus scraping).
+// Root / redirects to the base path.
+func BasePathMiddleware(basePath string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		path := r.URL.Path
+
+		// Strip base path prefix if present
+		if strings.HasPrefix(path, basePath+"/") || path == basePath {
+			r.URL.Path = strings.TrimPrefix(path, basePath)
+			if r.URL.Path == "" {
+				r.URL.Path = "/"
+			}
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Keep /health and /metrics accessible without prefix
+		if path == "/health" || path == "/metrics" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Redirect root to base path
+		if path == "/" {
+			http.Redirect(w, r, basePath+"/", http.StatusFound)
+			return
+		}
+
+		http.NotFound(w, r)
+	})
 }
 
 // spaHandler serves the React SPA - returns index.html for non-file routes
