@@ -11,6 +11,8 @@ import {
   ArrowPathIcon,
   ArchiveBoxIcon,
   Cog6ToothIcon,
+  ChartBarIcon,
+  BellAlertIcon,
 } from '@heroicons/react/24/outline'
 
 const navSections = [
@@ -32,6 +34,8 @@ const navSections = [
   {
     title: 'Monitoring',
     items: [
+      { to: '/metrics', icon: ChartBarIcon, label: 'Metrics' },
+      { to: '/alerts', icon: BellAlertIcon, label: 'Alerts' },
       { to: '/logs', icon: DocumentTextIcon, label: 'Logs' },
       { to: '/redis-monitor', icon: CircleStackIcon, label: 'Redis Monitor' },
       { to: '/system', icon: CpuChipIcon, label: 'System' },

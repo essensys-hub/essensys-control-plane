@@ -8,6 +8,8 @@ import ActionsPage from './pages/ActionsPage'
 import LogsPage from './pages/LogsPage'
 import RedisMonitorPage from './pages/RedisMonitorPage'
 import SystemPage from './pages/SystemPage'
+import MetricsPage from './pages/MetricsPage'
+import AlertsPage from './pages/AlertsPage'
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
           <Route path="/logs" element={<LogsPage />} />
           <Route path="/redis-monitor" element={<RedisMonitorPage />} />
           <Route path="/system" element={<SystemPage />} />
+          <Route path="/metrics" element={<MetricsPage />} />
+          <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/versions" element={<VersionsPage />} />
           <Route path="/backups" element={<RedisMonitorPage />} />
           <Route path="/settings" element={<SystemPage />} />

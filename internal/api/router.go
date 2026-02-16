@@ -77,6 +77,16 @@ func NewRouter(
 	// --- Audit API ---
 	mux.HandleFunc("GET /api/audit", redis.GetAuditLog)
 
+	// --- Prometheus / Alertmanager Proxy API ---
+	prom := NewPrometheusHandler("http://127.0.0.1:9092", "http://127.0.0.1:9093")
+	mux.HandleFunc("GET /api/prometheus/query", prom.Query)
+	mux.HandleFunc("GET /api/prometheus/query_range", prom.QueryRange)
+	mux.HandleFunc("GET /api/prometheus/alerts", prom.Alerts)
+	mux.HandleFunc("GET /api/prometheus/rules", prom.Rules)
+	mux.HandleFunc("GET /api/prometheus/targets", prom.Targets)
+	mux.HandleFunc("GET /api/alertmanager/alerts", prom.AlertmanagerAlerts)
+	mux.HandleFunc("GET /api/alertmanager/silences", prom.AlertmanagerSilences)
+
 	// --- Static files (React UI) ---
 	if staticFS != nil {
 		fileServer := http.FileServerFS(staticFS)

@@ -113,6 +113,38 @@ export const audit = {
     fetchJSON<AuditEntry[]>(`/audit?limit=${limit}${key ? `&key=${key}` : ''}`),
 }
 
+// --- Prometheus ---
+export const prometheus = {
+  query: (query: string) =>
+    fetchJSON<{ status: string; data: { resultType: string; result: Array<{ metric: Record<string, string>; value: [number, string] }> } }>(
+      `/prometheus/query?query=${encodeURIComponent(query)}`
+    ),
+  queryRange: (query: string, start: number, end: number, step: number) =>
+    fetchJSON<{ status: string; data: { resultType: string; result: Array<{ metric: Record<string, string>; values: Array<[number, string]> }> } }>(
+      `/prometheus/query_range?query=${encodeURIComponent(query)}&start=${start}&end=${end}&step=${step}`
+    ),
+  alerts: () =>
+    fetchJSON<{ status: string; data: { alerts: Array<{ labels: Record<string, string>; annotations: Record<string, string>; state: string; activeAt: string; value: string }> } }>(
+      '/prometheus/alerts'
+    ),
+  rules: () =>
+    fetchJSON<{ status: string; data: { groups: Array<{ name: string; rules: Array<{ name: string; query: string; state: string; alerts: unknown[]; labels: Record<string, string>; annotations: Record<string, string>; type: string }> }> } }>(
+      '/prometheus/rules'
+    ),
+  targets: () =>
+    fetchJSON<{ status: string; data: { activeTargets: Array<{ labels: Record<string, string>; health: string; lastScrape: string; scrapeUrl: string }> } }>(
+      '/prometheus/targets'
+    ),
+}
+
+// --- Alertmanager ---
+export const alertmanager = {
+  alerts: () =>
+    fetch(BASE + '/alertmanager/alerts').then(r => r.json()),
+  silences: () =>
+    fetch(BASE + '/alertmanager/silences').then(r => r.json()),
+}
+
 // --- WebSocket helpers ---
 export function createWebSocket(path: string): WebSocket {
   const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
