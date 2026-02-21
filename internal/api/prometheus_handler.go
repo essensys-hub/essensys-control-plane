@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"time"
 )
 
 type PrometheusHandler struct {
-	prometheusURL  string
+	prometheusURL   string
 	alertmanagerURL string
-	httpClient     *http.Client
+	httpClient      *http.Client
 }
 
 func NewPrometheusHandler(prometheusURL, alertmanagerURL string) *PrometheusHandler {
 	return &PrometheusHandler{
-		prometheusURL:  prometheusURL,
+		prometheusURL:   prometheusURL,
 		alertmanagerURL: alertmanagerURL,
 		httpClient: &http.Client{
 			Timeout: 10 * time.Second,
@@ -32,12 +33,12 @@ func (h *PrometheusHandler) Query(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/query?query=%s", h.prometheusURL, query)
+	reqURL := fmt.Sprintf("%s/api/v1/query?query=%s", h.prometheusURL, url.QueryEscape(query))
 	if t := r.URL.Query().Get("time"); t != "" {
-		url += "&time=" + t
+		reqURL += "&time=" + t
 	}
 
-	h.proxyGet(w, url)
+	h.proxyGet(w, reqURL)
 }
 
 // GET /api/prometheus/query_range?query=...&start=...&end=...&step=...
@@ -57,10 +58,10 @@ func (h *PrometheusHandler) QueryRange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := fmt.Sprintf("%s/api/v1/query_range?query=%s&start=%s&end=%s&step=%s",
-		h.prometheusURL, query, start, end, step)
+	reqURL := fmt.Sprintf("%s/api/v1/query_range?query=%s&start=%s&end=%s&step=%s",
+		h.prometheusURL, url.QueryEscape(query), start, end, step)
 
-	h.proxyGet(w, url)
+	h.proxyGet(w, reqURL)
 }
 
 // GET /api/prometheus/alerts
