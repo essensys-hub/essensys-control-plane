@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { exchange } from '../services/api'
+import { exchange, createWebSocket } from '../services/api'
 import type { ExchangeEntry } from '../types'
 import DataTable from '../components/Services/DataTable'
 import PageHeader from '../components/Layout/PageHeader'
@@ -13,6 +13,7 @@ export default function ExchangePage() {
   const [tableData, setTableData] = useState<ExchangeEntry[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<ExchangeEntry[]>([])
+  const [liveData, setLiveData] = useState<ExchangeEntry[]>([])
   const [loading, setLoading] = useState(false)
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const [editValue, setEditValue] = useState('')
@@ -28,6 +29,27 @@ export default function ExchangePage() {
   useEffect(() => {
     if (activeTab === 'browse') {
       loadTable()
+    }
+
+    if (activeTab === 'live') {
+      const ws = createWebSocket(`/redis/exchange/${CLIENT_ID}/stream`)
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          setLiveData(data)
+        } catch (e) {
+          console.error('Failed to parse live data', e)
+        }
+      }
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error)
+      }
+
+      return () => {
+        ws.close()
+      }
     }
   }, [activeTab])
 
@@ -69,6 +91,9 @@ export default function ExchangePage() {
         prev.map((e) => (e.index === editingIndex ? { ...e, value: editValue } : e))
       )
       setSearchResults((prev) =>
+        prev.map((e) => (e.index === editingIndex ? { ...e, value: editValue } : e))
+      )
+      setLiveData((prev) =>
         prev.map((e) => (e.index === editingIndex ? { ...e, value: editValue } : e))
       )
     } catch (err) {
@@ -142,11 +167,10 @@ export default function ExchangePage() {
               <button
                 key={pill.id}
                 onClick={() => setCategoryFilter(pill.id)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${
-                  categoryFilter === pill.id
+                className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${categoryFilter === pill.id
                     ? 'bg-cp-blue text-white'
                     : 'bg-cp-gray-100 text-cp-gray-600 hover:bg-cp-gray-200'
-                }`}
+                  }`}
               >
                 {pill.label}
               </button>
@@ -193,9 +217,12 @@ export default function ExchangePage() {
       )}
 
       {activeTab === 'live' && (
-        <div className="bg-white rounded-lg border border-cp-gray-200 p-12 text-center">
-          <p className="text-cp-gray-500 text-sm">WebSocket coming soon</p>
-        </div>
+        <DataTable
+          columns={columns}
+          data={liveData}
+          keyFn={(item) => String(item.index)}
+          emptyMessage="Waiting for live data... (WebSocket connected)"
+        />
       )}
     </div>
   )
