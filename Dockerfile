@@ -5,7 +5,7 @@ FROM node:20-alpine AS ui-builder
 
 WORKDIR /ui
 COPY ui/package*.json ./
-RUN npm ci
+RUN npm ci --verbose
 COPY ui/ ./
 RUN npm run build
 
