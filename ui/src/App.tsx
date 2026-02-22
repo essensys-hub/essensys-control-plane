@@ -10,6 +10,7 @@ import RedisMonitorPage from './pages/RedisMonitorPage'
 import SystemPage from './pages/SystemPage'
 import MetricsPage from './pages/MetricsPage'
 import AlertsPage from './pages/AlertsPage'
+import OpenClawPage from './pages/OpenClawPage'
 
 const BASE_PATH = import.meta.env.BASE_URL.replace(/\/$/, '') || ''
 
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/versions" element={<VersionsPage />} />
           <Route path="/backups" element={<RedisMonitorPage />} />
           <Route path="/settings" element={<SystemPage />} />
+          <Route path="/openclaw" element={<OpenClawPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

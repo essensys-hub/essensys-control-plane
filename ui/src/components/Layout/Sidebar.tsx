@@ -13,6 +13,7 @@ import {
   Cog6ToothIcon,
   ChartBarIcon,
   BellAlertIcon,
+  SparklesIcon,
 } from '@heroicons/react/24/outline'
 
 const navSections = [
@@ -39,6 +40,12 @@ const navSections = [
       { to: '/logs', icon: DocumentTextIcon, label: 'Logs' },
       { to: '/redis-monitor', icon: CircleStackIcon, label: 'Redis Monitor' },
       { to: '/system', icon: CpuChipIcon, label: 'System' },
+    ],
+  },
+  {
+    title: 'AI Assistant',
+    items: [
+      { to: '/openclaw', icon: SparklesIcon, label: 'OpenClaw' },
     ],
   },
   {
@@ -80,10 +87,9 @@ export default function Sidebar() {
                 to={item.to}
                 end={item.to === '/'}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-5 py-2 text-sm transition-colors ${
-                    isActive
-                      ? 'bg-cp-sidebar-active text-white'
-                      : 'text-white/60 hover:text-white hover:bg-cp-sidebar-hover'
+                  `flex items-center gap-3 px-5 py-2 text-sm transition-colors ${isActive
+                    ? 'bg-cp-sidebar-active text-white'
+                    : 'text-white/60 hover:text-white hover:bg-cp-sidebar-hover'
                   }`
                 }
               >
